@@ -1,0 +1,85 @@
+# Django Web Application Requirements
+
+## System Requirements
+- Ubuntu Server 24.04 LTS
+- Python Virtual Environment (venv)
+
+## Tech Stack
+- Frontend: NGINX
+- Backend: Django (latest version)
+- Database: PostgreSQL
+
+## Authentication System
+- Standard Django login
+- Google account registration (Django AllAuth)
+
+## User Profile Features
+- Company Information
+  - Company Name
+  - Company Logo Upload
+- Personal Information
+  - First Name
+  - Last Name
+  - Email
+  - Phone Number
+  - Profile Picture Upload
+
+## Employee Management
+- Employee List Section
+  - Agent Name
+  - Station Number (linked to SMDR report files)
+
+##Page structure
+- Home
+- Blog
+- About
+- Support
+    - Q&A 
+- User Dashboard
+    - Management
+    - Report
+    - Support
+
+
+## Application Pages
+
+### Home Page
+- Main landing page
+
+### Blog Page
+- SEO-optimized articles
+- Features:
+  - Article Title
+  - Summary
+  - Rich Text Content
+  - Image Carousel
+  - Video Integration (upload or YouTube)
+  - Authenticated User Comments
+
+### User Dashboard
+- Analytics and Metrics:
+  - Total Call Statistics
+  - Inbound vs Outbound Calls
+  - Agent Call Distribution
+  - Average Call Duration
+  - SLA Compliance Trends
+
+### Report Management
+- SMDR Report Processing:
+  - .slk.gz File Upload
+  - Automatic .gz Decompression
+  - .slk File Parsing
+  - CLI Number Column Processing
+  - Station Number Matching
+  - Report Summary Display
+
+## Technical Implementation Requirements
+- Django Models:
+  - User Model
+  - Employee Model
+  - SMDR Records Model
+- File Upload System
+- SMDR Parser with Data Cleaning
+- Routing and Templates
+- Frontend Styling (Bootstrap/Tailwind)
+- Dashboard Visualization (Chart.js/Recharts)
