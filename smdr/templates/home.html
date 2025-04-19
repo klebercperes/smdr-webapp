@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - SMDR{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>Welcome to SMDR</h1>
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.email }}! You are logged in.</p>
+    {% else %}
+        <p>Please <a href="{% url 'account_login' %}">login</a> or <a href="{% url 'account_signup' %}">sign up</a> to continue.</p>
+    {% endif %}
+</div>
+{% endblock %} 

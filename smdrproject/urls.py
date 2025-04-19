@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from smdr.views import test_email
+from smdr.views import home, test_email
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', home, name='home'),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('test-email/', test_email, name='test_email'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
