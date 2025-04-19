@@ -1,13 +1,47 @@
-# Django
-*.pyc
+# Python
 __pycache__/
-db.sqlite3
-.env
-/static/
-/media/
+*.py[cod]
+*.pyo
+*.so
 
-# Virtual env
+# Virtual environment
 venv/
+env/
+ENV/
 
-# VS Code settings (optional)
+# Environment variables
+.env
+
+# Django stuff
+db.sqlite3
+media/
+staticfiles/
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# VS Code
 .vscode/
+
+# PyCharm
+.idea/
+
+# Jupyter notebooks
+*.ipynb_checkpoints/
+
+# Compressed files
+*.gz
+*.zip
+*.tar
+*.slk
+
+# Node modules (if using Tailwind or Webpack)
+node_modules/
+
+# Migration backup (optional)
+*/migrations/*.pyc
+*/migrations/__pycache__/
