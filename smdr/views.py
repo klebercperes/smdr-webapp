@@ -8,9 +8,6 @@ from django.conf import settings
 def home(request):
     return render(request, 'home.html')
 
-
-
-
 def test_email(request):
     try:
         send_mail(

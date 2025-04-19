@@ -1,0 +1,18 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=kleber
+Group=smdradmin
+WorkingDirectory=/home/kleber/smdr
+Environment="PATH=/home/kleber/smdr/venv/bin"
+ExecStart=/home/kleber/smdr/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          smdrproject.wsgi:application
+
+[Install]
+WantedBy=multi-user.target 
