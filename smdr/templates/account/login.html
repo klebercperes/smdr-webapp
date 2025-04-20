@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block title %}{% trans "Sign In" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .social-login {
+        margin: 1rem 0;
+    }
+
+    .google-login-btn {
+        display: block;
+        width: 100%;
+        padding: 0.8rem;
+        background: #4285f4;
+        color: white;
+        text-align: center;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .google-login-btn:hover {
+        background: #357abd;
+    }
+
+    .login-divider {
+        text-align: center;
+        margin: 1rem 0;
+        position: relative;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 45%;
+        height: 1px;
+        background: #ddd;
+    }
+
+    .login-divider::before { left: 0; }
+    .login-divider::after { right: 0; }
+
+    .login-divider span {
+        background: white;
+        padding: 0 10px;
+        color: #666;
+    }
+
+    .login form {
+        margin-top: 1rem;
+    }
+
+    .login form p {
+        margin-bottom: 1rem;
+    }
+
+    .login form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+
+    .login form input[type="email"],
+    .login form input[type="password"] {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+
+    .login form button {
+        width: 100%;
+        padding: 0.8rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .login form button:hover {
+        background: var(--secondary);
+    }
+
+    .login-links {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .login-links a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .login-links a:hover {
+        color: var(--secondary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h1>{% trans "Sign In" %}</h1>
+
+    {% get_providers as socialaccount_providers %}
+
+    {% if socialaccount_providers %}
+        <div class="social-login">
+            <a href="{% provider_login_url 'google' %}" class="google-login-btn">
+                <i class="fab fa-google"></i> Sign in with Google
+            </a>
+        </div>
+
+        <div class="login-divider">
+            <span>or</span>
+        </div>
+    {% endif %}
+
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+    </form>
+
+    <div class="login-links">
+        <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+        <a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+    </div>
+</div>
+{% endblock %} 
