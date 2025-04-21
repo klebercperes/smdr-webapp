@@ -1,7 +1,30 @@
-Django==5.2
+# Core Django
+Django>=5.0
 asgiref==3.8.1
 sqlparse==0.5.3
-psycopg2-binary==2.9.9
-python-dotenv==1.0.1
-gunicorn==21.2.0
+
+# Database
+psycopg2-binary>=2.9.9
+
+# Authentication & Authorization
+django-allauth>=0.61.1
+django-crispy-forms>=2.1
+crispy-tailwind>=0.5.0
+
+# Static Files & Media
 whitenoise==6.6.0
+Pillow>=10.2.0
+
+# Production Server
+gunicorn>=21.2.0
+
+# Environment Variables
+python-dotenv>=1.0.0
+
+# Styling
+django-tailwind>=3.8.0
+
+# Development Tools
+black>=24.2.0
+flake8>=7.0.0
+isort>=5.13.2

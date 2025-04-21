@@ -1,6 +1,8 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+from django.core.exceptions import ImproperlyConfigured
 import logging
 
 logger = logging.getLogger(__name__)
@@ -48,4 +50,44 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             
         except Exception as e:
             logger.error(f"Error getting social app: {str(e)}")
-            raise 
+            raise
+            
+    def get_default_redirect_url(self, request, socialaccount=None):
+        """
+        Return the default redirect URL after successful authentication.
+        """
+        try:
+            # Try to get the URL from settings first
+            from django.conf import settings
+            if hasattr(settings, 'LOGIN_REDIRECT_URL'):
+                try:
+                    return reverse(settings.LOGIN_REDIRECT_URL)
+                except:
+                    logger.warning(f"Could not reverse URL {settings.LOGIN_REDIRECT_URL}, falling back to root URL")
+                    return '/'
+            
+            # Fallback to the namespaced URL
+            return reverse('smdr:home')
+        except Exception as e:
+            logger.error(f"Error getting redirect URL: {str(e)}")
+            # Fallback to the root URL if all else fails
+            return '/'
+            
+    def is_auto_signup_allowed(self, request, sociallogin):
+        """
+        Enable auto signup for social accounts.
+        """
+        return True
+        
+    def save_user(self, request, sociallogin, form=None):
+        """
+        Save the user and ensure email is verified.
+        """
+        user = super().save_user(request, sociallogin, form)
+        if sociallogin.account.provider == 'google':
+            # Ensure email is verified for Google accounts
+            email_address = sociallogin.email_addresses[0]
+            email_address.verified = True
+            email_address.primary = True
+            email_address.save()
+        return user 
