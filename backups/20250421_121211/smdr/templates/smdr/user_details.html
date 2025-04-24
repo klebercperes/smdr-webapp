@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile - {{ profile.user.username }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <!-- Header with profile picture -->
+            <div class="relative h-32 bg-indigo-600">
+                <div class="absolute -bottom-16 left-8">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" 
+                             class="w-32 h-32 rounded-full border-4 border-white bg-white object-cover"/>
+                    {% else %}
+                        <div class="w-32 h-32 rounded-full border-4 border-white bg-gray-200 flex items-center justify-center">
+                            <span class="text-4xl text-gray-500">{{ profile.user.username|make_list|first|upper }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="absolute top-4 right-4">
+                    <a href="{% url 'account_profile_edit' %}" 
+                       class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- User Information -->
+            <div class="px-8 pt-20 pb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Personal Information -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-medium text-gray-900">Personal Information</h3>
+                        <div class="border rounded-lg p-6 space-y-4">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Username</h4>
+                                <p class="mt-1 text-sm text-gray-900">{{ profile.user.username }}</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Full Name</h4>
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {% if profile.first_name or profile.last_name %}
+                                        {{ profile.first_name }} {{ profile.last_name }}
+                                    {% else %}
+                                        Not provided
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Email</h4>
+                                <p class="mt-1 text-sm text-gray-900">{{ profile.email|default:"Not provided" }}</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Phone Number</h4>
+                                <p class="mt-1 text-sm text-gray-900">{{ profile.phone_number|default:"Not provided" }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company Information -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-medium text-gray-900">Company Information</h3>
+                        <div class="border rounded-lg p-6 space-y-4">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Company Name</h4>
+                                <p class="mt-1 text-sm text-gray-900">{{ profile.company_name|default:"Not provided" }}</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Company Logo</h4>
+                                {% if profile.company_logo %}
+                                    <img src="{{ profile.company_logo.url }}" alt="Company Logo" 
+                                         class="mt-2 h-20 object-contain"/>
+                                {% else %}
+                                    <p class="mt-1 text-sm text-gray-900">No logo uploaded</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

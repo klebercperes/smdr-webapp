@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Delete Comment{% endblock %}
+
+{% block blog_content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+        <h1 class="text-2xl font-bold text-gray-900">Delete Comment</h1>
+    </div>
+
+    <div class="border-t border-gray-200">
+        <div class="bg-white px-4 py-5 sm:p-6">
+            <p class="text-gray-700 mb-4">
+                Are you sure you want to delete your comment?
+                This action cannot be undone.
+            </p>
+
+            <form method="post" class="flex justify-end space-x-3">
+                {% csrf_token %}
+                <a href="{{ object.article.get_absolute_url }}" 
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
+                    Delete Comment
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

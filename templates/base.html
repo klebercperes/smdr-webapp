@@ -1,0 +1,204 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SMDR{% endblock %}</title>
+    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block extra_css %}{% endblock %}
+    <script>
+        // Function to get CSRF token from cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Add CSRF token to all AJAX requests
+        document.addEventListener('DOMContentLoaded', function() {
+            const csrftoken = getCookie('csrftoken');
+            if (csrftoken) {
+                // Add CSRF token to all forms
+                const forms = document.getElementsByTagName('form');
+                for (let form of forms) {
+                    if (!form.querySelector('input[name="csrfmiddlewaretoken"]')) {
+                        const csrfInput = document.createElement('input');
+                        csrfInput.type = 'hidden';
+                        csrfInput.name = 'csrfmiddlewaretoken';
+                        csrfInput.value = csrftoken;
+                        form.appendChild(csrfInput);
+                    }
+                }
+            }
+        });
+    </script>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{% url 'smdr:home' %}" class="text-xl font-bold text-indigo-600">SMDR</a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="{% url 'smdr:home' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Home
+                        </a>
+                        <a href="{% url 'smdr:about' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            About
+                        </a>
+                        <a href="{% url 'blog:article_list' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Blog
+                        </a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'account_profile' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Profile
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    {% if user.is_authenticated %}
+                        <div class="flex items-center space-x-4">
+                            <span class="text-gray-700">
+                                Welcome, {% if user.profile.first_name %}{{ user.profile.first_name }}{% else %}{{ user.email }}{% endif %}
+                            </span>
+                            <a href="{% url 'account_logout' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                                Logout
+                            </a>
+                        </div>
+                    {% else %}
+                    <div class="flex items-center space-x-4">
+                        <a href="{% url 'account_login' %}" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                            Login
+                        </a>
+                        <a href="{% url 'account_signup' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                            Sign Up
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- Mobile menu button -->
+                <div class="flex items-center sm:hidden">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="sm:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="{% url 'smdr:home' %}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800">
+                    Home
+                </a>
+                <a href="{% url 'smdr:about' %}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800">
+                    About
+                </a>
+                <a href="{% url 'blog:article_list' %}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800">
+                    Blog
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'account_profile' %}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800">
+                    Profile
+                </a>
+                {% endif %}
+            </div>
+            {% if user.is_authenticated %}
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-4">
+                    <div class="flex-shrink-0">
+                        <span class="text-gray-700">
+                            Welcome, {% if user.profile.first_name %}{{ user.profile.first_name }}{% else %}{{ user.email }}{% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="mt-3 space-y-1">
+                    <a href="{% url 'account_logout' %}" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                        Logout
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="mt-3 space-y-1">
+                    <a href="{% url 'account_login' %}" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                        Login
+                    </a>
+                    <a href="{% url 'account_signup' %}" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                        Sign Up
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        {% if messages %}
+        <div class="mb-4 space-y-2">
+            {% for message in messages %}
+            <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-700 border border-green-200{% elif message.tags == 'error' %}bg-red-100 text-red-700 border border-red-200{% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white shadow-lg mt-8">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">About SMDR</h3>
+                    <p class="text-gray-600">Providing advanced SMDR solutions for modern businesses.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'smdr:home' %}" class="text-gray-600 hover:text-indigo-600">Home</a></li>
+                        <li><a href="{% url 'smdr:about' %}" class="text-gray-600 hover:text-indigo-600">About</a></li>
+                        <li><a href="{% url 'blog:article_list' %}" class="text-gray-600 hover:text-indigo-600">Blog</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="text-gray-600">Email: info@smdr.com</li>
+                        <li class="text-gray-600">Phone: (555) 123-4567</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <p class="text-center text-gray-600">&copy; {% now "Y" %} SMDR. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

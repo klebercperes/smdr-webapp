@@ -1,0 +1,18 @@
+[Unit]
+Description=SMDR Application Servers
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/home/kleber/smdr
+ExecStart=/home/kleber/smdr/scripts/start_servers.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=smdr
+
+[Install]
+WantedBy=multi-user.target 
